@@ -1,4 +1,4 @@
-package com.StockSimX;
+package com.StockSimX   ;
 
 import java.util.Scanner;
 
