@@ -3,32 +3,34 @@ package com.StockSimX;
 import java.util.Random;
 
 public class Trader implements Runnable {
-    private final int id;
+    private final String name;
     private final Market market;
-    private final int ticks;
+    private final Random random;
 
-    public Trader(int id, Market market, int ticks) {
-        this.id = id;
+    public Trader(String name, Market market, Random random) {
+        this.name = name;
         this.market = market;
-        this.ticks = ticks;
+        this.random = new Random();
     }
 
     @Override
-    public void run() {
-        Random random = new Random();
-        for (int i = 1; i <= ticks ; i++) {
-            try {
-                Thread.sleep(random.nextInt(500));
-                boolean buy = random.nextBoolean();
-                int quantity = random.nextInt(10) + 1;
-                int price = 100 + random.nextInt(50);
+    public void run(){
+        try {
+            while (true){
+                Thread.sleep(500 + random.nextInt(1000));
+                boolean isBuy = random.nextBoolean();
+                int price = 90 + random.nextInt(21);
+                int quantity = 1 + random.nextInt(10);
 
-                String action = buy ? "BUY" : "SELL";
-                System.out.printf("Trader %d Tick %d → %s %d shares @ ₹%d\n", id, i, action, quantity, price);
-                market.executeOrder(id,action,quantity,price);
-            }  catch (InterruptedException e) {
-                System.out.println("Trader " + id + " interrupted");
+//                Order order = new Order(name,isBuy,price,quantity);
+
+                System.out.println(">> " + name + " placed " + (isBuy ? "BUY" : "SELL") +
+                        " order | Price: ₹" + price + " | Qty: " + quantity);
+
+                market.executeOrders(order);
             }
+        } catch (InterruptedException Ex){
+            System.out.println(name + " stopped trading");
         }
     }
 }

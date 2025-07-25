@@ -42,4 +42,7 @@ public class Market {
             lock.readLock().unlock();
         }
     }
+    public Order executeOrders(Order order){
+       return order;
+    }
 }
