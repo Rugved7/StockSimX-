@@ -1,40 +1,37 @@
 package com.StockSimX;
 
-import com.StockSimX.Market;
-import com.StockSimX.Trader;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("🚀 Welcome to StockSimX - Multithreaded Stock Market");
-
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter number of traders to simulate: ");
-        int traderCount = scanner.nextInt();
-
-        System.out.print("Enter number of ticks (market cycles): ");
-        int tickCount = scanner.nextInt();
-
+    public static void main(String[] args) throws InterruptedException {
         Market market = new Market();
 
-        ExecutorService executor = Executors.newFixedThreadPool(traderCount);
-        List<Trader> traders = new ArrayList<>();
+        // Register stocks
+        market.registerStock("AAPL", 150.0);
+        market.registerStock("GOOG", 2800.0);
+        market.registerStock("TSLA", 700.0);
 
-        for (int i = 1; i <= traderCount; i++) {
-            Trader trader = new Trader(i, market, tickCount);
+        // Start traders
+        List<Trader> traders = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            Trader trader = new Trader("Trader-" + i, market);
+            trader.start();
             traders.add(trader);
-            executor.submit(trader);
         }
 
-        executor.shutdown();
-        System.out.println("\n🟢 Traders started. Waiting for simulation to complete...\n");
+        // Let simulation run for 10 seconds
+        Thread.sleep(10_000);
 
-        scanner.close();
+        // Stop all traders
+        for (Trader t : traders) {
+            t.shutdown();
+        }
+
+        // Wait for all threads to finish
+        for (Trader t : traders) {
+            t.join();
+        }
+
+        System.out.println("\n=== Simulation ended ===");
     }
 }

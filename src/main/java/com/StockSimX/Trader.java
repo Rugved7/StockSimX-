@@ -1,36 +1,38 @@
 package com.StockSimX;
 
-import java.util.Random;
-
-public class Trader implements Runnable {
+public class Trader extends Thread {
     private final String name;
     private final Market market;
-    private final Random random;
+    private volatile boolean running = true;
 
-    public Trader(String name, Market market, Random random) {
+    public Trader(String name, Market market) {
         this.name = name;
         this.market = market;
-        this.random = new Random();
     }
 
     @Override
-    public void run(){
-        try {
-            while (true){
-                Thread.sleep(500 + random.nextInt(1000));
-                boolean isBuy = random.nextBoolean();
-                int price = 90 + random.nextInt(21);
-                int quantity = 1 + random.nextInt(10);
+    public void run() {
+        while (running) {
+            try {
+                Order.OrderType type = Math.random() < 0.5 ? Order.OrderType.BUY : Order.OrderType.SELL;
+                String[] stocks = {"AAPL", "GOOG", "TSLA"};
+                String stock = stocks[(int) (Math.random() * stocks.length)];
+                int quantity = (int) (Math.random() * 10) + 1;
 
-//                Order order = new Order(name,isBuy,price,quantity);
+                Order order = new Order(type, stock, quantity);
+                market.placeOrder(name, order);
 
-                System.out.println(">> " + name + " placed " + (isBuy ? "BUY" : "SELL") +
-                        " order | Price: ₹" + price + " | Qty: " + quantity);
-
-                market.executeOrders(order);
+                Thread.sleep((int) (Math.random() * 1500) + 500); // 0.5 – 2 sec
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
             }
-        } catch (InterruptedException Ex){
-            System.out.println(name + " stopped trading");
         }
+
+        System.out.println(name + " stopped.");
+    }
+
+    public void shutdown() {
+        running = false;
     }
 }
