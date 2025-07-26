@@ -3,7 +3,7 @@ A comprehensive Java application demonstrating advanced concurrency concepts thr
 
  ## 🎯 Overview
 StockSimX simulates a real-time stock exchange where multiple traders (threads) place buy/sell orders simultaneously while a central matching engine processes trades safely.
-This project demonstrates advanced Java multithreading concepts used in actual financial systems.
+This project demonstrates advanced Java Multithreading concepts used in actual financial systems.
 
 ## Architecture Diagram
 
