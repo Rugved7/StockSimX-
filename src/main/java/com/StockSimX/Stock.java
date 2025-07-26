@@ -39,7 +39,7 @@ public class Stock {
         }
     }
 
-    public void stimulateFluctuation() {
+    public void stimulatePriceFluctuation() {
         double changePercent = random.nextGaussian() * 0.02; // 2% movement
         double currentPrice = getCurrentPrice();
         double newPrice = currentPrice * (1 + changePercent);
@@ -47,4 +47,21 @@ public class Stock {
         updatePrice(newPrice);
     }
 
+    public void addVolume(long volume) {
+        totalVolume.addAndGet(volume); // Uses Compare-And-Swap (CAS) operation
+    }
+
+    public long getTotalVolume() {
+        return totalVolume.get();
+    }
+
+    public String getStatusReport() {
+        return String.format("Stock[%s]: Price=$%.2f, Volume=%d shares",
+                symbol, getCurrentPrice(), getTotalVolume());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s($%.2f)", symbol, getCurrentPrice());
+    }
 }
