@@ -51,6 +51,10 @@ public class Stock {
         totalVolume.addAndGet(volume); // Uses Compare-And-Swap (CAS) operation
     }
 
+    public String getSymbol() {
+        return symbol;
+    }
+
     public long getTotalVolume() {
         return totalVolume.get();
     }
