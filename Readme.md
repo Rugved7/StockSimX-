@@ -94,7 +94,13 @@ src/main/java/
 ### 🔄 Realistic Market Simulation
 - Price-time priority matching (realistic exchange rules)
 - Partial order fills when quantities don't match exactly
-- Market volatility through random price movements  
+- Market volatility through random price movements
+
+## Further Enhancements
+- Build a GUI for this project using React Native
+- Scale it up to more than 4 stocks (expecting 20 stocks)
+- Use the concept of Distributed Database and Scaling
+- Use and deploy it on cloud platform like Amazon AWS
 
 
 ## 📄 License
