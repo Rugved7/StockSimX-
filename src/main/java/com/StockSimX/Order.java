@@ -3,23 +3,26 @@ package com.StockSimX;
 import java.util.Objects;
 
 public class Order {
-    private final int traderId;
-    private final String symbol; // "AAPL", ""GOGL", etc
-    private final OrderType type; // Buy || Sell
-    private final int quantity;
-    private final double price;
-    private final long timeStamp;
+    // All fields are final to make this class immutable and thread-safe
+    private final String traderId;      // Which trader placed this order
+    private final String symbol;        // Stock symbol (e.g., "AAPL", "GOOGL")
+    private final OrderType type;       // BUY or SELL
+    private final int quantity;         // Number of shares
+    private final double price;         // Price per share
+    private final long timestamp;       // When order was created (for ordering)
 
-    public Order(double price, int quantity, OrderType type, String symbol, int traderId) {
-        this.price = price;
-        this.quantity = quantity;
-        this.type = type;
-        this.symbol = symbol;
+    public Order(String traderId, String symbol, OrderType type, int quantity, double price) {
         this.traderId = traderId;
-        this.timeStamp = System.currentTimeMillis();
+        this.symbol = symbol;
+        this.type = type;
+        this.quantity = quantity;
+        this.price = price;
+        // Timestamp helps with order priority (first-come-first-served for same price)
+        this.timestamp = System.currentTimeMillis();
     }
 
-    public int getTraderId() {
+    // Getter methods - no setters because order is immutable
+    public String getTraderId() {
         return traderId;
     }
 
@@ -39,8 +42,8 @@ public class Order {
         return price;
     }
 
-    public long getTimeStamp() {
-        return timeStamp;
+    public long getTimestamp() {
+        return timestamp;
     }
 
     @Override
@@ -55,22 +58,21 @@ public class Order {
     }
 
     @Override
-    public boolean equals(Object obj){
-        if(this == obj) return true;
-        if(obj == null || getClass() != obj.getClass()) return false;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
 
         Order order = (Order) obj;
         return quantity == order.quantity &&
                 Double.compare(order.price, price) == 0 &&
-                timeStamp == order.timeStamp &&
-                Objects.equals(traderId, order.traderId) &&
+                timestamp == order.timestamp &&
+                traderId.equals(order.traderId) &&
                 symbol.equals(order.symbol) &&
                 type == order.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(traderId, symbol, type, quantity, price, timeStamp);
+        return Objects.hash(traderId, symbol, type, quantity, price, timestamp);
     }
 }
-
