@@ -10,6 +10,6 @@ public enum OrderType {
 
     @Override
     public String toString() {
-        return this == BUY ? "Buy" : "Sell";
+        return this == BUY ? "BUY" : "SELL";
     }
 }
